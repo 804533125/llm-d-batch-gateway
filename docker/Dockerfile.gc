@@ -1,17 +1,22 @@
-FROM quay.io/projectquay/golang:1.27 AS builder
+# syntax=docker/dockerfile:1
+FROM --platform=$BUILDPLATFORM quay.io/projectquay/golang:1.27 AS builder
 ARG TARGETOS
 ARG TARGETARCH
 
 WORKDIR /workspace
 COPY go.mod go.mod
 COPY go.sum go.sum
-RUN go mod download
+RUN --mount=type=cache,target=/go/pkg/mod go mod download
 
 COPY cmd/batch-gc/ cmd/batch-gc/
 COPY internal/ internal/
 COPY pkg/ pkg/
 
-RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o bin/batch-gateway-gc ./cmd/batch-gc
+# Build on the host architecture (BUILDPLATFORM) so the Go toolchain cross-compiles to
+# TARGETARCH natively instead of running under QEMU.
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} \
+    go build -o bin/batch-gateway-gc ./cmd/batch-gc
 
 FROM gcr.io/distroless/static:nonroot
 WORKDIR /

@@ -283,7 +283,8 @@ image-build-apiserver: check-container-tool
 		--platform linux/$(TARGETARCH) \
 		--build-arg TARGETOS=linux \
 		--build-arg TARGETARCH=$(TARGETARCH) \
-		-f docker/Dockerfile.apiserver \
+		-f docker/Dockerfile \
+		--target apiserver \
 		-t $(APISERVER_IMG) .
 
 ## image-build-processor: Build processor Docker image
@@ -293,7 +294,8 @@ image-build-processor: check-container-tool
 		--platform linux/$(TARGETARCH) \
 		--build-arg TARGETOS=linux \
 		--build-arg TARGETARCH=$(TARGETARCH) \
-		-f docker/Dockerfile.processor \
+		-f docker/Dockerfile \
+		--target processor \
 		-t $(PROCESSOR_IMG) .
 
 ## image-build-gc: Build garbage collector Docker image
@@ -303,7 +305,8 @@ image-build-gc: check-container-tool
 		--platform linux/$(TARGETARCH) \
 		--build-arg TARGETOS=linux \
 		--build-arg TARGETARCH=$(TARGETARCH) \
-		-f docker/Dockerfile.gc \
+		-f docker/Dockerfile \
+		--target gc \
 		-t $(GC_IMG) .
 
 ## image-build: Build all Docker images

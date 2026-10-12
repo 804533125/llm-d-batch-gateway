@@ -31,7 +31,8 @@ group "default" {
 # API Server target
 target "apiserver" {
   context    = "."
-  dockerfile = "docker/Dockerfile.apiserver"
+  dockerfile = "docker/Dockerfile"
+  target     = "apiserver"
 
   platforms = ["linux/amd64", "linux/arm64"]
 
@@ -64,7 +65,8 @@ target "apiserver" {
 # Batch Processor target
 target "processor" {
   context    = "."
-  dockerfile = "docker/Dockerfile.processor"
+  dockerfile = "docker/Dockerfile"
+  target     = "processor"
 
   platforms = ["linux/amd64", "linux/arm64"]
 
@@ -97,7 +99,8 @@ target "processor" {
 # Garbage Collector target
 target "gc" {
   context    = "."
-  dockerfile = "docker/Dockerfile.gc"
+  dockerfile = "docker/Dockerfile"
+  target     = "gc"
 
   platforms = ["linux/amd64", "linux/arm64"]
 
